@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Click Me</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #clickBtn {
+    padding: 24px 48px;
+    font-size: 28px;
+    background: #111;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #clickBtn:hover {
+    background: #222;
+  }
+  #scare {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    display: none;
+    background: #000;
+  }
+</style>
+</head>
+<body>
+  <button id="clickBtn">Click Me</button>
+  <img id="scare" src="scare.png" alt="" />
+  <audio id="scream" src="scream.mp3" preload="auto"></audio>
+  <script>
+    const btn = document.getElementById('clickBtn');
+    const img = document.getElementById('scare');
+    const audio = document.getElementById('scream');
+
+    btn.addEventListener('click', async () => {
+      try {
+        const el = document.documentElement;
+        if (el.requestFullscreen) await el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+      } catch (e) { /* ignore */ }
+
+      btn.style.display = 'none';
+      img.style.display = 'block';
+      audio.currentTime = 0;
+      audio.volume = 1.0;
+      audio.play().catch(() => {});
+    });
+  </script>
+</body>
+</html>
