@@ -41,13 +41,37 @@
 </style>
 </head>
 <body>
-  <button id="clickBtn">Click Me</button>
+  <button id="clickBtn" disabled>Loading...</button>
   <img id="scare" src="scare.png" alt="" />
   <audio id="scream" src="scream.mp3" preload="auto"></audio>
   <script>
     const btn = document.getElementById('clickBtn');
     const img = document.getElementById('scare');
     const audio = document.getElementById('scream');
+
+    // Wait for both image and audio to be ready before enabling the button,
+    // so the first click doesn't show a blank/unloaded asset on GitHub Pages.
+    let imgReady = false;
+    let audioReady = false;
+    function checkReady() {
+      if (imgReady && audioReady) {
+        btn.disabled = false;
+        btn.textContent = 'Click Me';
+      }
+    }
+    if (img.complete && img.naturalWidth > 0) {
+      imgReady = true;
+    } else {
+      img.addEventListener('load', () => { imgReady = true; checkReady(); });
+      img.addEventListener('error', () => { imgReady = true; checkReady(); });
+    }
+    if (audio.readyState >= 4) {
+      audioReady = true;
+    } else {
+      audio.addEventListener('canplaythrough', () => { audioReady = true; checkReady(); }, { once: true });
+      audio.addEventListener('error', () => { audioReady = true; checkReady(); }, { once: true });
+    }
+    checkReady();
 
     btn.addEventListener('click', async () => {
       try {
